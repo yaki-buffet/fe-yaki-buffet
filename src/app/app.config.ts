@@ -11,22 +11,21 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
-import { SsrCookieService } from 'ngx-cookie-service-ssr';
 import { USER_ID } from './user-id.token';
+import { CookieService } from 'ngx-cookie-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     {
       provide: USER_ID,
-      useFactory: (cookieService: SsrCookieService) => {
-        let id = cookieService.get('app_user_id');
+      useFactory: (cookieService: CookieService) => {
+        const id = cookieService.get('app_user_id');
         if (!id) {
-          id = crypto.randomUUID();
-          cookieService.set('app_user_id', id);
+          console.log('id not defined');
         }
         return id;
       },
-      deps: [SsrCookieService],
+      deps: [CookieService],
     },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
